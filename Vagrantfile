@@ -19,7 +19,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
-  config.vm.network "forwarded_port", guest: 27017, host: 27017
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
@@ -73,11 +72,18 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # #               Managed by Puppet.\n"
   # # }
   #
-  # config.vm.provision "puppet" do |puppet|
-  #   puppet.manifests_path = "manifests"
-  #   puppet.manifest_file  = "project_manifest.pp"
-  # end
-  config.vm.provision "puppet"
+  config.vm.define "couch" do |couch|
+  	 config.vm.network "forwarded_port", guest: 5984, host: 5984
+	 config.vm.provision "puppet" do |puppet|
+	 	puppet.manifest_file = "couch.pp"
+	 end
+  end
+  config.vm.define "mongo" do |mongo|
+  	 config.vm.network "forwarded_port", guest: 27017, host: 27017
+     config.vm.provision "puppet" do |puppet|
+         puppet.manifest_file  = "mongo.pp"
+     end
+  end
   config.vm.hostname = "vagrant.example.com"
   # Enable provisioning with chef solo, specifying a cookbooks path, roles
   # path, and data_bags path (all relative to this Vagrantfile), and adding
