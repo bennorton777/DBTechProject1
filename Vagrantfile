@@ -84,6 +84,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
          puppet.manifest_file  = "mongo.pp"
      end
   end
+  config.vm.define "redis" do |redis|
+  	 config.vm.network "forwarded_port", guest: 6379, host: 6379
+	 config.vm.provision "puppet" do |puppet|
+	 	puppet.manifest_file = "redis.pp"
+	 end
+  end
+
   config.vm.hostname = "vagrant.example.com"
   # Enable provisioning with chef solo, specifying a cookbooks path, roles
   # path, and data_bags path (all relative to this Vagrantfile), and adding
